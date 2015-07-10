@@ -6,6 +6,7 @@ from django.contrib.admin.widgets import ForeignKeyRawIdWidget
 from django.contrib.admin.sites import site
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.db.models.base import ModelBase
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 
@@ -113,7 +114,7 @@ class FilerFileField(models.ForeignKey):
 
     def __init__(self, **kwargs):
         # We hard-code the `to` argument for ForeignKey.__init__
-        if "to" in kwargs.keys():  # pragma: no cover
+        if "to" in kwargs.keys() and isinstance(kwargs['to'], ModelBase):  # pragma: no cover
             old_to = kwargs.pop("to")
             dfl = "%s.%s" % (
                     self.default_model_class._meta.app_label,
